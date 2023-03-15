@@ -1,8 +1,23 @@
 package simpleneural
 
+/*
+#include <math.h>
+
+double sigmoid(double x) {
+    return 1.0 / (1.0 + exp(-x));
+}
+
+double Tanh(double x) {
+    return sinh(x) / cosh(x);
+}
+
+*/
+import "C"
 import (
 	"math"
 	"math/rand"
+
+	"github.com/attarrumi/simpleneural/assembly"
 )
 
 const (
@@ -14,26 +29,26 @@ const (
 
 func (nn *NeuralNetwork) OutActivation(x float64) float64 {
 	if nn.OActivation == SigmoidA {
-		return sigmoid(x)
+		return SigmoidC(x)
 	} else if nn.OActivation == TanhA {
 		return math.Tanh(x)
 	} else if nn.OActivation == ReluA {
-		return relu(x)
+		return Relu(x)
 	} else {
-		return sigmoid(x)
+		return Sigmoid(x)
 	}
 
 }
 
 func (nn *NeuralNetwork) HiddenActivation(x float64) float64 {
 	if nn.HActivation == "sigmoid" {
-		return sigmoid(x)
+		return SigmoidC(x)
 	} else if nn.HActivation == "tanh" {
 		return math.Tanh(x)
 	} else if nn.HActivation == "relu" {
-		return relu(x)
+		return Relu(x)
 	} else {
-		return sigmoid(x)
+		return Sigmoid(x)
 	}
 
 }
@@ -46,13 +61,17 @@ func CostDerivative(output []float64, target []float64) []float64 {
 	return delta
 }
 
-func sigmoid(x float64) float64 {
+func Sigmoid(x float64) float64 {
 	return 1.0 / (1.0 + math.Exp(-x))
+}
+
+func SigmoidC(x float64) float64 {
+	return assembly.ClangOne(C.sigmoid, x)
 }
 
 // sigmoidPrime
 func SigmoidPrime(x float64) float64 {
-	return sigmoid(x) * (1 - sigmoid(x))
+	return Sigmoid(x) * (1 - Sigmoid(x))
 }
 
 func randomMatrix(rows, cols int) [][]float64 {
@@ -66,7 +85,7 @@ func randomMatrix(rows, cols int) [][]float64 {
 	return matrix
 }
 
-func relu(x float64) float64 {
+func Relu(x float64) float64 {
 	if x < 0 {
 		return 0
 	}

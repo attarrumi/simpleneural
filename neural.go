@@ -87,10 +87,7 @@ func (nn *NeuralNetwork) Runn(i interface{}, learningRate float64, num, numInput
 	rn := i.([][]float64)
 	input := rn[0]
 	target := rn[1]
-	// Perform feedforward
 
-	//dropoutProb := 0.3
-	//input, _ = Dropout(input, dropoutProb)
 	hiddenActivations := make([]float64, nn.hiddenNodes)
 	for i := 0; i < nn.hiddenNodes; i++ {
 		weightedSum := nn.biasH[i]
