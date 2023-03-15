@@ -1,6 +1,6 @@
 
 
-func main() {
+
 	rand.Seed(time.Now().UnixNano())
 	x, y := GenerateData(1000)
 	
@@ -28,4 +28,4 @@ func main() {
 		p := n.FeedForward(input)
 		fmt.Printf("Input: %v, Target: %v, Output: %v\n", input, y[i], p)
 	}
-}
+
