@@ -166,7 +166,7 @@ func (nn *NeuralNetwork) Runn(i interface{}, learningRate float64, num, numInput
 
 	if (int(sum)+1)%num == 0 {
 		last := time.Since(start)
-		avgLoss := totalLoss / float64(numInput)
+		avgLoss := totalLoss / float64(sum)
 		loss2 := MeanSquaredError(target, outputActivations)
 
 		fmt.Printf("Time %s Epoch %d: Loss = %.4f TotalLost: %.4f\n", last, sum+1, loss2, avgLoss)
