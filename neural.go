@@ -51,13 +51,13 @@ func (nn *NeuralNetwork) FeedForward(input []float64) []float64 {
 		for j := 0; j < nn.inputNodes; j++ {
 			weightedSum += nn.weightsIH[i][j] * input[j]
 		}
-		if nn.HActivation != "softmax" {
+		if nn.HActivation != SoftmaxA {
 			hiddenActivations[i] = nn.HiddenActivation(weightedSum)
 
 		}
 	}
 
-	if nn.HActivation == "softmax" {
+	if nn.HActivation == SoftmaxA {
 		hiddenActivations = Softmax(hiddenActivations)
 	}
 
@@ -189,17 +189,21 @@ func (nn *NeuralNetwork) Train(x, y [][]float64) {
 	for j := 0; j < epoch; j++ {
 		for i := 0; i < len(x); i += batch {
 
-			batchX := x[i : i+batch]
-			batchY := y[i : i+batch]
+			end := i + batch
+			if end > len(x) {
+				end = len(x)
+			}
+			batchX := x[i:end]
+			batchY := y[i:end]
+
 			for o, input := range batchX {
 				wg.Add(1)
 				_ = p.Invoke([][]float64{input, batchY[o]})
-
 			}
 
 		}
 	}
-	//loss := CategoricalCrossEntropyLoss(x, y)
+
 	last := time.Since(start)
 
 	fmt.Printf("Time %s Gorontine: %d \n\n", last, p.Running())
