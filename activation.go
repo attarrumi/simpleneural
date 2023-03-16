@@ -97,19 +97,23 @@ func Relu(x float64) float64 {
 }
 
 func Softmax(x []float64) []float64 {
-	exp := make([]float64, len(x))
-	sumExp := 0.0
 
-	for i := 0; i < len(x); i++ {
-		exp[i] = assembly.ClangOne(C.Exp, x[i])
-
-		sumExp += exp[i]
+	max := x[0]
+	for i := 1; i < len(x); i++ {
+		if x[i] > max {
+			max = x[i]
+		}
 	}
+	exps := make([]float64, len(x))
+	sum := 0.0
+	for i := 0; i < len(x); i++ {
+		exps[i] = assembly.ClangOne(C.Exp, x[i]-max)
 
+		sum += exps[i]
+	}
 	result := make([]float64, len(x))
 	for i := 0; i < len(x); i++ {
-		result[i] = exp[i] / sumExp
+		result[i] = exps[i] / sum
 	}
-
 	return result
 }
