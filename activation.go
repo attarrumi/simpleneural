@@ -101,7 +101,8 @@ func Softmax(x []float64) []float64 {
 	sumExp := 0.0
 
 	for i := 0; i < len(x); i++ {
-		exp[i] = math.Exp(x[i])
+		exp[i] = assembly.ClangOne(C.Exp, x[i])
+
 		sumExp += exp[i]
 	}
 
