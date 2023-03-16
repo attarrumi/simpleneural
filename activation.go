@@ -11,6 +11,10 @@ double Tanh(double x) {
     return sinh(x) / cosh(x);
 }
 
+double Exp(double x) {
+	return exp(x);
+}
+
 */
 import "C"
 import (
@@ -66,7 +70,7 @@ func Sigmoid(x float64) float64 {
 }
 
 func SigmoidC(x float64) float64 {
-	return assembly.ClangOne(C.sigmoid, x)
+	return 1.0 / (1.0 + assembly.ClangOne(C.Exp, -x))
 }
 
 // sigmoidPrime
