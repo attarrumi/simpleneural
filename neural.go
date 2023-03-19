@@ -112,7 +112,8 @@ func (nn *NeuralNetwork) Runn(i interface{}, learningRate float64, num, numInput
 	outputErrors := make([]float64, nn.outputNodes)
 	for i := 0; i < nn.outputNodes; i++ {
 		outputErrors[i] = target[i] - outputActivations[i]
-		loss += 0.5 * outputErrors[i] * outputErrors[i]
+		//loss += 0.5 * outputErrors[i] * outputErrors[i]
+		loss += 0.5 * math.Pow(target[i]-outputActivations[i], 2)
 
 	}
 
