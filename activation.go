@@ -38,6 +38,8 @@ func (nn *NeuralNetwork) OutActivation(x float64) float64 {
 		return math.Tanh(x)
 	} else if nn.OActivation == ReluA {
 		return Relu(x)
+	} else if nn.OActivation == SoftmaxA {
+		return Softmax(x)
 	} else {
 		return Sigmoid(x)
 	}
@@ -96,24 +98,10 @@ func Relu(x float64) float64 {
 	return x
 }
 
-func Softmax(x []float64) []float64 {
+func Softmax(x float64) float64 {
+	return assembly.ClangOne(C.Exp, x) / sumExp(x)
+}
 
-	max := x[0]
-	for i := 1; i < len(x); i++ {
-		if x[i] > max {
-			max = x[i]
-		}
-	}
-	exps := make([]float64, len(x))
-	sum := 0.0
-	for i := 0; i < len(x); i++ {
-		exps[i] = assembly.ClangOne(C.Exp, x[i]-max)
-
-		sum += exps[i]
-	}
-	result := make([]float64, len(x))
-	for i := 0; i < len(x); i++ {
-		result[i] = exps[i] / sum
-	}
-	return result
+func sumExp(x float64) float64 {
+	return assembly.ClangOne(C.Exp, x) + 1.0
 }

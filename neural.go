@@ -51,14 +51,8 @@ func (nn *NeuralNetwork) FeedForward(input []float64) []float64 {
 		for j := 0; j < nn.inputNodes; j++ {
 			weightedSum += nn.weightsIH[i][j] * input[j]
 		}
-		if nn.HActivation != SoftmaxA {
-			hiddenActivations[i] = nn.HiddenActivation(weightedSum)
+		hiddenActivations[i] = nn.HiddenActivation(weightedSum)
 
-		}
-	}
-
-	if nn.HActivation == SoftmaxA {
-		hiddenActivations = Softmax(hiddenActivations)
 	}
 
 	// Calculate activations for the output layer
@@ -68,13 +62,10 @@ func (nn *NeuralNetwork) FeedForward(input []float64) []float64 {
 		for j := 0; j < nn.hiddenNodes; j++ {
 			weightedSum += nn.weightsHO[i][j] * hiddenActivations[j]
 		}
-		if nn.OActivation != SoftmaxA {
-			outputActivations[i] = nn.OutActivation(weightedSum)
-		}
+		outputActivations[i] = nn.OutActivation(weightedSum)
+
 	}
-	if nn.OActivation == SoftmaxA {
-		outputActivations = Softmax(outputActivations)
-	}
+
 	return outputActivations
 }
 
@@ -96,14 +87,8 @@ func (nn *NeuralNetwork) Runn(i interface{}, learningRate float64, num, numInput
 		}
 		weightedSum += nn.biasH[i]
 
-		if nn.HActivation != SoftmaxA {
-			hiddenActivations[i] = nn.HiddenActivation(weightedSum)
+		hiddenActivations[i] = nn.HiddenActivation(weightedSum)
 
-		}
-	}
-
-	if nn.HActivation == SoftmaxA {
-		hiddenActivations = Softmax(hiddenActivations)
 	}
 
 	if nn.Dropout > 0.0 {
@@ -118,13 +103,8 @@ func (nn *NeuralNetwork) Runn(i interface{}, learningRate float64, num, numInput
 		}
 		weightedSum += nn.biasO[i]
 
-		if nn.OActivation != SoftmaxA {
-			outputActivations[i] = nn.OutActivation(weightedSum)
-		}
-	}
+		outputActivations[i] = nn.OutActivation(weightedSum)
 
-	if nn.OActivation == SoftmaxA {
-		outputActivations = Softmax(outputActivations)
 	}
 
 	loss := 0.0
